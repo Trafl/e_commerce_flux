@@ -3,17 +3,14 @@ package ecomecer.servicos.clientes.core.model_mapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-@Component
-@RequiredArgsConstructor
+@Configuration
 public class MapperConfig {
-
-    private final ModelMapper mapper;
-
     @Bean
     ModelMapper config(){
-        return mapper;
+        return new ModelMapper();
     }
 }

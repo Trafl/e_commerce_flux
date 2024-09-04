@@ -1,10 +1,12 @@
 package ecomecer.servicos.clientes.domain.service;
 
+import ecomecer.servicos.clientes.domain.dto.ClientDTOInput;
 import ecomecer.servicos.clientes.domain.exception.ClientNotFoundException;
 import ecomecer.servicos.clientes.domain.model.Client;
 import ecomecer.servicos.clientes.domain.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 @Log4j2
 public class ClientServiceImpl implements ClientService{
+
+    private final ModelMapper mapper;
 
     private final ClientRepository repository;
 
@@ -32,7 +36,7 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public Client getClient(Long id) {
-        log.info("[{}] - ClientServiceImpl executing getClient with id [{}]", logTime, id);
+        log.info("[{}] - ClientServiceImpl executing getClient with id {}", logTime, id);
         return  repository.findById(id)
                 .orElseThrow(
                         ()-> new ClientNotFoundException(
@@ -46,13 +50,16 @@ public class ClientServiceImpl implements ClientService{
     }
 
     @Override
-    public Client updateClient(Long id, Client client) {
-        return null;
+    public Client updateClient(Long id, ClientDTOInput InputClient) {
+        var clientDB = getClient(id);
+        mapper.map(InputClient, clientDB);
+
+        return repository.save(clientDB);
     }
 
     @Override
     public void deleteClient(Long id) {
-        log.info("[{}] - ClientServiceImpl executing deleteClient with id [{}]", logTime, id);
+        log.info("[{}] - ClientServiceImpl executing deleteClient with id {}", logTime, id);
         getClient(id);
         repository.deleteById(id);
         log.info("[{}] - ClientServiceImpl deleted client successful", logTime);

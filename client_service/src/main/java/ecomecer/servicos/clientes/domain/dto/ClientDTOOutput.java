@@ -16,7 +16,7 @@ public class ClientDTOOutput {
 
     private String email;
 
-    private LocalDate birth_day;
+    private LocalDate born_day;
 
     private AddressDTO address;
 }
